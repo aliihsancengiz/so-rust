@@ -1,22 +1,25 @@
+
 #[allow(dead_code)]
-enum Type {
+pub enum Type {
     Server,
     Client,
 }
 
-struct ReqRep {
+type Callback = fn(msg: &String) -> String;
+
+pub struct ReqRep {
     socket_handle: zmq::Socket,
     socket_type: Type,
     socket_addr: &'static str,
-	callback: fn(req: &String, resp: &mut String),
 }
 
-trait Sync {
+pub trait Sync {
     fn new(socket_type: Type, socket_addr: String) -> Self;
     fn start(&self);
     fn send(&self, msg: &String);
     fn recv(&self) -> String;
-    fn reqrep(&self, req: &String, resp: &mut String);
+    fn client_process(&self, req: &String, resp: &mut String);
+	fn server_process(&self,cb:Callback);
 }
 
 impl Sync for ReqRep {
@@ -39,10 +42,15 @@ impl Sync for ReqRep {
         }
     }
 
-    fn reqrep(&self, req: &String, resp: &mut String) {
+    fn client_process(&self, req: &String, resp: &mut String) {
         self.send(&req);
         *resp = self.recv();
     }
+
+	fn server_process(&self,cb:Callback)
+	{
+		self.send(&(cb)(&self.recv()));
+	}
 
     fn send(&self, msg: &String) {
         let resp = zmq::Message::from(&msg);
@@ -57,15 +65,3 @@ impl Sync for ReqRep {
     }
 }
 
-fn process_request(request: &mut String) -> String {
-    request.push_str("Hello i am rust server");
-    request.to_string()
-}
-
-fn main() {
-    let my_server = ReqRep::new(Type::Server, String::from("tcp://127.0.0.1:1234"));
-    my_server.start();
-    loop {
-        my_server.send(&mut process_request(&mut my_server.recv()));
-    }
-}
