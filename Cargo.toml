@@ -1,5 +1,5 @@
 [package]
-name = "arch03"
+name = "so-rust"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,8 +10,8 @@ zmq = "0.9"
 
 [[bin]]
 name = "server"
-path = "src/server.rs"
+path = "examples/reqrep/server.rs"
 
 [[bin]]
 name = "client"
-path = "src/client.rs"
+path = "examples/reqrep/client.rs"
