@@ -13,7 +13,7 @@ pub struct ReqRep {
     socket_addr: &'static str,
 }
 
-pub trait Sync {
+pub trait SyncReqRep {
     fn new(socket_type: Type, socket_addr: String) -> Self;
     fn start(&self);
     fn send(&self, msg: &String);
@@ -22,7 +22,7 @@ pub trait Sync {
 	fn server_process(&self,cb:Callback);
 }
 
-impl Sync for ReqRep {
+impl SyncReqRep for ReqRep {
     fn new(socket_type: Type, socket_addr: String) -> Self {
         let _type = match socket_type {
             Type::Server => zmq::REP,

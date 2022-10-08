@@ -1,9 +1,8 @@
-mod reqrep;
-use crate::reqrep::Sync;
+use so_rust::so::reqrep::*;
 
 
 fn main() {
-    let client = reqrep::ReqRep::new(reqrep::Type::Client, String::from("tcp://127.0.0.1:1234"));
+    let client = ReqRep::new(Type::Client, String::from("tcp://127.0.0.1:1234"));
     client.start();
 	loop {
 		let req:String = String::from("REQ : Tell me who are you ?");
