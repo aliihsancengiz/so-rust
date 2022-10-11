@@ -23,3 +23,11 @@ path = "examples/pubsub/subscriber.rs"
 [[bin]]
 name = "publisher"
 path = "examples/pubsub/publisher.rs"
+
+[[bin]]
+name = "writer"
+path = "examples/channel/writer.rs"
+
+[[bin]]
+name = "reader"
+path = "examples/channel/reader.rs"
