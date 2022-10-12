@@ -1,4 +1,4 @@
-use crate::so::socket::Socket;
+use crate::so::socket::{Socket,Type};
 
 pub struct ChannelIn
 {
@@ -29,10 +29,7 @@ impl SyncChannelIn for ChannelIn
 {
 	fn new(socket_addr: String) -> Self {
 		Self {
-			socket: Socket {
-				socket_handle: zmq::Context::new().socket(zmq::PULL).unwrap(),
-				socket_addr: Box::leak(socket_addr.into_boxed_str()),
-			},
+			socket: Socket::new(socket_addr,Type::InputChannel),
 		}
 	}
 	fn start(&self) {
@@ -48,10 +45,7 @@ impl SyncChannelOut for ChannelOut
 {
 	fn new(socket_addr: String) -> Self {
 		Self {
-			socket: Socket {
-				socket_handle: zmq::Context::new().socket(zmq::PUSH).unwrap(),
-				socket_addr: Box::leak(socket_addr.into_boxed_str()),
-			},
+			socket: Socket::new(socket_addr,Type::OutputChannel),
 		}
 	}
 	fn start(&self) {

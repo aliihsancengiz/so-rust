@@ -1,4 +1,4 @@
-use crate::so::socket::Socket;
+use crate::so::socket::{Socket,Type};
 
 type Callback = fn(msg: &String) -> String;
 
@@ -25,10 +25,7 @@ pub trait SyncReqRepClient {
 impl SyncReqRepServer for ReqRepServer {
     fn new(socket_addr: String) -> Self {
         Self {
-            socket: Socket {
-                socket_handle: zmq::Context::new().socket(zmq::REP).unwrap(),
-                socket_addr: Box::leak(socket_addr.into_boxed_str()),
-            },
+            socket: Socket::new(socket_addr,Type::Server),
         }
     }
 
@@ -47,10 +44,7 @@ impl SyncReqRepServer for ReqRepServer {
 impl SyncReqRepClient for ReqRepClient {
     fn new(socket_addr: String) -> Self {
         Self {
-            socket: Socket {
-                socket_handle: zmq::Context::new().socket(zmq::REQ).unwrap(),
-                socket_addr: Box::leak(socket_addr.into_boxed_str()),
-            },
+            socket:  Socket::new(socket_addr,Type::Client),
         }
     }
 
