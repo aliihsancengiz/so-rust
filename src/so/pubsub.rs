@@ -1,4 +1,4 @@
-use crate::so::socket::Socket;
+use crate::so::socket::{Socket,Type};
 use std::collections::HashMap;
 
 type MessageArrivedCallback = fn(topic:String,message:String);
@@ -20,14 +20,11 @@ impl SyncPublisher for Publisher
     fn new(socket_addr: String) -> Self
     {
         Self {
-            socket: Socket {
-                socket_handle: zmq::Context::new().socket(zmq::PUB).unwrap(),
-                socket_addr: Box::leak(socket_addr.into_boxed_str()),
-            },
+            socket: Socket::new(socket_addr,Type::Publisher),
         }
     }
     fn start(&self) {
-        self.socket.socket_handle.bind(self.socket.socket_addr).unwrap();
+        self.socket.start();
     }
     fn publish(&self,topic:String, message:String)
     {
@@ -55,16 +52,13 @@ impl SyncSubscriber for Subscriber
     fn new(socket_addr: String) -> Self
     {
         Self {
-            socket: Socket {
-                socket_handle: zmq::Context::new().socket(zmq::SUB).unwrap(),
-                socket_addr: Box::leak(socket_addr.into_boxed_str()),
-            },
+            socket: Socket::new(socket_addr,Type::Subscriber),
             callback_map : HashMap::new(),
         }
     }
 
     fn start(&self) {
-        self.socket.socket_handle.connect(self.socket.socket_addr).unwrap();
+        self.socket.start();
     }
 
     fn subscribe(&mut self,topic:String,cb:MessageArrivedCallback)
