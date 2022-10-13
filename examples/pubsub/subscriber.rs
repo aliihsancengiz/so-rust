@@ -1,4 +1,5 @@
 use so_rust::so::pubsub::*;
+use so_rust::so::layer::Layer;
 
 fn ma(topic:String,message:String)
 {
@@ -7,7 +8,7 @@ fn ma(topic:String,message:String)
 
 fn main()
 {
-    let mut subs = Subscriber::new(String::from("tcp://127.0.0.1:12345"));
+    let mut subs = Subscriber::new(Layer::ipc("service","pub-sub"));
     let topic = String::from("lamp");
     subs.start();
     subs.subscribe(topic,ma);

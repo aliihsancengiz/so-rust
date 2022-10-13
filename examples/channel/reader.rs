@@ -1,7 +1,8 @@
 use so_rust::so::channel::*;
+use so_rust::so::layer::Layer;
 
 fn main() {
-    let reader : ChannelIn = ChannelIn::new(String::from("tcp://127.0.0.1:4540"));
+    let reader : ChannelIn = ChannelIn::new(Layer::ipc("service","reader-writer"));
     reader.start();
 
     loop {
