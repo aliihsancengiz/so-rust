@@ -19,3 +19,23 @@ impl Layer
         "ipc://".to_owned()+&path_to_service
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+    #[test]
+    fn layer_tcp() {
+        assert_eq!(Layer::tcp("127.0.0.1",1234), "tcp://127.0.0.1:1234");
+    }
+	#[test]
+	fn layer_ipc() {
+		assert_eq!(Layer::ipc("test","layer"), "ipc:///tmp/so_zmq_test_layer");
+	}
+
+	#[test]
+	fn layer_ipc_file_exists() {
+		_ = Layer::ipc("test","layer");
+		assert!(std::path::Path::new("/tmp/so_zmq_test_layer").exists());
+	}
+}
