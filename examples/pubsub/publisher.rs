@@ -1,8 +1,9 @@
 use so_rust::so::pubsub::*;
+use so_rust::so::layer::Layer;
 
 fn main()
 {
-    let publisher = Publisher::new(String::from("tcp://127.0.0.1:12345"));
+    let publisher = Publisher::new(Layer::ipc("service","pub-sub"));
     publisher.start();
     loop {
         let topic = String::from("lamp");

@@ -1,8 +1,8 @@
 use so_rust::so::channel::*;
-
+use so_rust::so::layer::Layer;
 
 fn main() {
-    let writer : ChannelOut = ChannelOut::new(String::from("tcp://127.0.0.1:4540"));
+    let writer : ChannelOut = ChannelOut::new(Layer::ipc("service","reader-writer"));
     writer.start();
 
     loop {
